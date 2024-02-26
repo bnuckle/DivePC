@@ -90,18 +90,25 @@ public class ZHL16
      */
     public ZHL16(double percentN2, double percentHe, double depth)
     {
-        this.percentN2 = percentN2;
-        this.percentHe = percentHe;
+        this.percentN2 = percentN2 / 100;
+        this.percentHe = percentHe / 100;
 
         nPBegin = percentN2;
         hPBegin = percentHe;
 
+
+        resetCompartments();
+    }
+
+    public void resetCompartments()
+    {
         for(int i = 0; i < 16; i++)
         {
-            compartmentN2[i] = percentN2 * ftToATM(depth);
-            compartmentH[i] = percentHe * ftToATM(depth);
+            compartmentN2[i] = percentN2 * depthToATM(depth);
+            compartmentH[i] = percentHe * depthToATM(depth);
         }
     }
+
 
     /**
      * calculates compartments
@@ -120,7 +127,8 @@ public class ZHL16
             //Pcomp = Pbegin + [ Pgas - Pbegin ] x [ 1 - 2 ^ ( - te / tht ) ]
             nPBegin = compartmentN2[i];
             ntht = halftimes[i][0];
-            compartmentN2[i] = nPBegin + ((nPGas - nPBegin) * ( 1 - Math.pow(2 , ( te / ntht ) ) ) );
+            nPGas = depthToATM(depth) * percentN2;
+            compartmentN2[i] = nPBegin + ((nPGas - nPBegin) * ( 1 - Math.pow(2 , ( -1 * te / ntht ) ) ) );
 
 
             //Helium
@@ -138,10 +146,9 @@ public class ZHL16
      * @param feet depth underwater
      * @return pressure
      */
-    private double ftToATM(double feet)
+    private double depthToATM(double feet)
     {
-        if(feet == 0) return 1;
-        return feet / 33 + 1;
+        return (feet + 33) / 33 ;
     }
 
     /**

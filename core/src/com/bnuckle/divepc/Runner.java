@@ -25,7 +25,8 @@ public class Runner extends Game
 	@Override
 	public void create () {
 		pc = new ZHL16();
-		pc.goToDepth(10);
+		pc.goToDepth(100);
+		pc.printCompartments();
 		pc.printCompartments();
 		setScreen(new Screen(){
 			@Override
@@ -38,9 +39,9 @@ public class Runner extends Game
 			public void render(float delta)
 			{
 				pc.step(delta);
-				if(Gdx.input.isKeyPressed(Input.Keys.A))
+
+				if(Gdx.input.isKeyJustPressed(Input.Keys.A))
 				{
-					System.out.println("hi");
 					pc.printCompartments();
 				}
 			}
