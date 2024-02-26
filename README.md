@@ -1,7 +1,5 @@
 # DivePC
-A Dive Computer Simulator 
-based off
-https://aquatec.files.wordpress.com/2011/03/decompression-theory.pdf
+A Dive Computer Simulator
 
 # Build and Run
 
@@ -11,3 +9,6 @@ Open command prompt in root folder where gradlew.bat is and type
 ## Run Windows/Linux/Mac OS X
 Open command prompt in root folder where gradlew.bat is and type
 "gradlew run"
+
+# Based Off of Information Found in These Papers
+https://aquatec.files.wordpress.com/2011/03/decompression-theory.pdf
