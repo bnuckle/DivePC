@@ -14,19 +14,74 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.bnuckle.divepc;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class Runner extends ApplicationAdapter {
-	
+public class Runner extends Game
+{
+
+	ZHL16 pc;
+
 	@Override
 	public void create () {
-		System.out.println("Started");
+		pc = new ZHL16();
+		pc.goToDepth(10);
+		pc.printCompartments();
+		setScreen(new Screen(){
+			@Override
+			public void show()
+			{
+
+			}
+
+			@Override
+			public void render(float delta)
+			{
+				pc.step(delta);
+				if(Gdx.input.isKeyPressed(Input.Keys.A))
+				{
+					System.out.println("hi");
+					pc.printCompartments();
+				}
+			}
+
+			@Override
+			public void resize(int width, int height)
+			{
+
+			}
+
+			@Override
+			public void pause()
+			{
+
+			}
+
+			@Override
+			public void resume()
+			{
+
+			}
+
+			@Override
+			public void hide()
+			{
+
+			}
+
+			@Override
+			public void dispose()
+			{
+
+			}
+		});
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
+		super.render();
 	}
+
+
 
 }
