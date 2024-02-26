@@ -12,10 +12,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.bnuckle.divepc;
+package com.bnuckle.divepc.pc;
 
 /**
- * Emulates a dive computer using the ZHL16 algorithm
+ * Emulates a dive computer using the ZHL16A algorithm
+ * using the experimental values for a
  * Does not support diving at altitude
  */
 public class ZHL16
@@ -42,6 +43,22 @@ public class ZHL16
                     {390,   .2737,  .9544,  147.2,  .3788,  .9226},
                     {498,   .2523,  .9602,  187.9,  .3492,  .9321},
                     {635,   .2327,  .9553,  239.6,  .3220,  .9404}
+            };
+
+    private final double[][] mParts =
+            {
+                    {106.4, 1.9082},
+                    {83.2, 1.5352},
+                    {73.8,1.3847},
+                    {66.8, 1.2780},
+                    {62.3, 1.2306},
+                    {58.5, 1.1857},
+                    {55.2, 1.1504},
+                    {77, 1.1223},
+                    {109, 1.0999},
+                    {146, 1.0844},
+
+
             };
 
     private double percentN2, percentHe;
@@ -84,6 +101,9 @@ public class ZHL16
         this.percentHe = percentHe / 100;
 
         resetCompartments();
+
+        NDL = (halftimes[0][0] /6.93) * Math.log((compartmentH[0]-depthToATM(depth))/mValue(depth) - depthToATM(depth) );
+
     }
 
     public void resetCompartments()
@@ -115,6 +135,7 @@ public class ZHL16
             double nPGas = depthToATM(depth) * percentN2;
             compartmentN2[i] = compartmentN2[i] + ((nPGas - compartmentN2[i]) * ( 1 - Math.pow(2 , ( -1 * te / ntht) ) ) );
 
+            NDL = Math.min(NDL, (halftimes[i][0] /6.93) * Math.log((compartmentH[0]-depthToATM(depth))/mValue(depth) - depthToATM(depth) ));
 
             //Helium
             if (percentHe == 0) continue;
@@ -122,6 +143,8 @@ public class ZHL16
             double htht = halftimes[i][3]; //Half-time of the compartment (minutes)
             double hPGas = depthToATM(depth) * percentHe;
             compartmentH[i] = compartmentH[i] + ((hPGas - compartmentH[i]) * ( 1 - Math.pow(2 , ( te / htht) ) ) );
+
+            NDL = Math.min(NDL, (halftimes[i][3] /6.93) * Math.log((compartmentH[0]-depthToATM(depth))/mValue(depth) - depthToATM(depth) ));
         }
     }
 
@@ -162,6 +185,10 @@ public class ZHL16
         System.out.println(toString());
     }
 
+    /**
+     * returns a string representation of the compartments along with their partial pressures
+     * @return the string representation
+     */
     @Override
     public String toString()
     {
@@ -172,6 +199,11 @@ public class ZHL16
             result.append(String.format("%f | %f%n", compartmentN2[i], compartmentH[i]));
         }
         return result.toString();
+    }
+
+    private double mValue(double depth)
+    {
+        return  0;
     }
 
 }
