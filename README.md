@@ -1,5 +1,7 @@
 # DivePC
 A Dive Computer Simulator 
+based off
+https://aquatec.files.wordpress.com/2011/03/decompression-theory.pdf
 
 # Build and Run
 
