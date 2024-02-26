@@ -27,7 +27,6 @@ public class Runner extends Game
 		pc = new ZHL16();
 		pc.goToDepth(100);
 		pc.printCompartments();
-		pc.printCompartments();
 		setScreen(new Screen(){
 			@Override
 			public void show()

@@ -16,24 +16,11 @@ package com.bnuckle.divepc;
 
 /**
  * Emulates a dive computer using the ZHL16 algorithm
+ * Does not support diving at altitude
  */
 public class ZHL16
 {
 
-
-    //Nitrogen
-    private double  nPBegin, //Inert gas pressure in the compartment before the exposure time (ATM)
-                    nPGas,   //Inert gas pressure in the mixture being breathed (ATM)
-                    ntht;    //Half-time of the compartment (minutes)
-
-    //Helium
-    private double  hPBegin, //Inert gas pressure in the compartment before the exposure time (ATM)
-                    hPGas,   //Inert gas pressure in the mixture being breathed (ATM)
-                    htht;    //Half-time of the compartment (minutes)
-
-    private double pAmbtol; //Pressure you could drop to (ATM)
-
-    // Pcomp = Pbegin + [ Pgas - Pbegin ] x [ 1 - 2 ^ ( - te / tht ) ]
 
     //Half times, and a and b values for nitrogen and helium
     private final double[][] halftimes =
@@ -64,8 +51,11 @@ public class ZHL16
 
     private double depth;
 
+    private double NDL;
+
     /**
      * constructs a dive computer set up for diving air (EAN21 - 21% air 79% nitrogen 0% helium) at depth 0
+     * same as new ZHL16(79,0,0)
      */
     public ZHL16()
     {
@@ -93,10 +83,6 @@ public class ZHL16
         this.percentN2 = percentN2 / 100;
         this.percentHe = percentHe / 100;
 
-        nPBegin = percentN2;
-        hPBegin = percentHe;
-
-
         resetCompartments();
     }
 
@@ -112,32 +98,30 @@ public class ZHL16
 
     /**
      * calculates compartments
-     * @param te the time exposed in seconds
+     * @param delta the time exposed in seconds
      */
-    public void step(double te)
+    public void step(double delta)
     {
 
-        te /= 60;
+        //converts delta seconds into delta minutes
+        double te = delta / 60;
 
         //update each compartment
         for(int i = 0; i < 16; i++)
         {
             //Nitrogen
 
-            //Pcomp = Pbegin + [ Pgas - Pbegin ] x [ 1 - 2 ^ ( - te / tht ) ]
-            nPBegin = compartmentN2[i];
-            ntht = halftimes[i][0];
-            nPGas = depthToATM(depth) * percentN2;
-            compartmentN2[i] = nPBegin + ((nPGas - nPBegin) * ( 1 - Math.pow(2 , ( -1 * te / ntht ) ) ) );
+            double ntht = halftimes[i][0]; //Half-time of the compartment (minutes)
+            double nPGas = depthToATM(depth) * percentN2;
+            compartmentN2[i] = compartmentN2[i] + ((nPGas - compartmentN2[i]) * ( 1 - Math.pow(2 , ( -1 * te / ntht) ) ) );
 
 
             //Helium
             if (percentHe == 0) continue;
 
-            //Pcomp = Pbegin + [ Pgas - Pbegin ] x [ 1 - 2 ^ ( - te / tht ) ]
-            hPBegin = compartmentH[i];
-            htht = halftimes[i][3];
-            compartmentH[i] = hPBegin + ((hPGas - hPBegin) * ( 1 - Math.pow(2 , ( te / htht ) ) ) );
+            double htht = halftimes[i][3]; //Half-time of the compartment (minutes)
+            double hPGas = depthToATM(depth) * percentHe;
+            compartmentH[i] = compartmentH[i] + ((hPGas - compartmentH[i]) * ( 1 - Math.pow(2 , ( te / htht) ) ) );
         }
     }
 
@@ -171,15 +155,23 @@ public class ZHL16
     }
 
     /**
-     * prints
+     * prints the compartments along with their partial pressures
      */
     public void printCompartments()
     {
-        System.out.println("Compartments\nN2          He");
-        for (int i = 0; i < 16; i++)
+        System.out.println(toString());
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+        result.append("Compartments\nN2          He\n");
+        for(int i = 0; i < 16; i++)
         {
-            System.out.printf("%f | %f%n", compartmentN2[i], compartmentH[i]);
+            result.append(String.format("%f | %f%n", compartmentN2[i], compartmentH[i]));
         }
+        return result.toString();
     }
 
 }
