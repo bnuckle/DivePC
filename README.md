@@ -5,9 +5,13 @@ A Dive Computer Simulator
 
 ## Build Windows/Linux/Mac OS X
 Open command prompt in root folder where gradlew.bat is and type
+
 "gradlew desktop:dist"
+
+.jar will be found under desktop/build/libs
 ## Run Windows/Linux/Mac OS X
 Open command prompt in root folder where gradlew.bat is and type
+
 "gradlew run"
 
 # Based Off of Information Found in These Papers
