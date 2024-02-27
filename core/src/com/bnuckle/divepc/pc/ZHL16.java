@@ -106,7 +106,7 @@ public class ZHL16
 
         resetCompartments();
 
-        NDL = (halftimes[0][0] /6.93) * Math.log((compartmentH[0]-depthToATM(depth))/mValue(depth) - depthToATM(depth) );
+        NDL = (halftimes[0][0] /6.93) * Math.log((compartmentH[0]-depthToATM(depth))/mValue(depth,0) - depthToATM(depth) );
 
     }
 
