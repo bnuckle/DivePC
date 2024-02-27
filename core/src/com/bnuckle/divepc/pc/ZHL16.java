@@ -22,7 +22,7 @@ public class ZHL16
 {
 
 
-    //Half times, and a and b values for nitrogen and helium
+    //Half times and a and b values for nitrogen and helium
     private final double[][] halftimes =
             {   //       Nitrogen                 Helium
                 //  half    a       b       half    a       b
@@ -216,7 +216,7 @@ public class ZHL16
      */
     private double mValue(double depth, int c)
     {
-        return mParts[1][c] * depth + mParts[0][c];
+        return mParts[c][1] * depth + mParts[c][0];
     }
 
 }
