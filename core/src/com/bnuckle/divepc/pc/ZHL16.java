@@ -125,7 +125,6 @@ public class ZHL16
      */
     public void step(double delta)
     {
-
         //converts delta seconds into delta minutes
         double te = delta / 60;
 
@@ -143,11 +142,7 @@ public class ZHL16
 
             }
         }
-
-
     }
-
-
 
     /**
      * prints the compartments along with their partial pressures
@@ -173,4 +168,12 @@ public class ZHL16
         return result.toString();
     }
 
+    /**
+     * sets the ambient pressure
+     * @param ambientPressure the pressure to set it to
+     */
+    public void setPressure(double ambientPressure)
+    {
+        this.ambientPressure = ambientPressure;
+    }
 }

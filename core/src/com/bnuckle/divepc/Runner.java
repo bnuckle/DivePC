@@ -24,9 +24,10 @@ public class Runner extends Game
 
 	@Override
 	public void create () {
-		pc = new ZHL16();
-		pc.goToDepth(100);
-		pc.printCompartments();
+		Diver diver = new Diver();
+		diver.setPc(new ZHL16());
+		diver.setDepth(20);
+
 		setScreen(new Screen(){
 			@Override
 			public void show()
@@ -37,11 +38,11 @@ public class Runner extends Game
 			@Override
 			public void render(float delta)
 			{
-				pc.step(delta);
+				diver.step(delta);
 
 				if(Gdx.input.isKeyJustPressed(Input.Keys.A))
 				{
-					pc.printCompartments();
+					diver.getPc().printCompartments();
 				}
 			}
 
