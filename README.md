@@ -20,3 +20,7 @@ https://aquatec.files.wordpress.com/2011/03/decompression-theory.pdf
 https://www.shearwater.com/wp-content/uploads/2019/05/understanding_m-values.pdf
 
 https://www.diverite.com/articles/gradient-factors/
+
+https://www.shearwater.com/wp-content/uploads/2012/08/No-Stop_Time.pdf
+
+https://scubaboard.com/community/threads/formula-used-to-calculate-ndl.63210/
