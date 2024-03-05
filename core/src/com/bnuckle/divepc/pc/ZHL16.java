@@ -104,6 +104,7 @@ public class ZHL16
         this.percentN2 = percentN2 / 100;
         this.percentHe = percentHe / 100;
         this.ambientPressure = ambientPressure;
+        NDL = Integer.MAX_VALUE;
 
         resetCompartments();
 
@@ -148,6 +149,16 @@ public class ZHL16
         //Getting NDL
         for(int i =0; i < 16; i++)
         {
+            double Pi = (ambientPressure) * percentN2;
+            double P0 = compartmentN2[i];
+            double M0 = fswToAmt(mParts[i][0]);
+            double k = Math.log(2) / halftimes[1][0];
+            if( M0 > P0 && M0 < Pi)
+            {
+                double tNDL = (-1 / k) * Math.log((Pi - M0) / (Pi - P0));
+                NDL = Math.min(NDL, tNDL);
+                System.out.printf("compartment:%d tNDL:%f%n",i+1, tNDL);
+            }
 
         }
 
@@ -171,6 +182,7 @@ public class ZHL16
     {
         StringBuilder result = new StringBuilder();
         result.append(String.format("Pressure: %f%n",ambientPressure));
+        result.append(String.format("NDL: %f%n",NDL));
         result.append("Compartments\nN2          He\n");
         for(int i = 0; i < 16; i++)
         {
