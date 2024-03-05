@@ -70,39 +70,40 @@ public class ZHL16
     private double[] compartmentN2 = new double[16];
     private double[] compartmentH = new double[16];
 
-    private double depth;
+    private double ambientPressure;
 
     private double NDL;
 
     /**
-     * constructs a dive computer set up for diving air (EAN21 - 21% air 79% nitrogen 0% helium) at depth 0
+     * constructs a dive computer set up for diving air (EAN21 - 21% air 79% nitrogen 0% helium) at pressure 1atm
      * same as new ZHL16(79,0,0)
      */
     public ZHL16()
     {
-        this(79, 0, 0);
+        this(79, 0, 1);
     }
 
     /**
-     * constructs a dive computer at depth 0
+     * constructs a dive computer at pressure 1atm
      *@param percentN2 the percent of nitrogen in gas mixture
      *@param percentHe the percent of helium in gas mixture
      */
     public ZHL16(double percentN2, double percentHe)
     {
-        this(percentN2, percentHe, 0);
+        this(percentN2, percentHe, 1);
     }
 
     /**
      * constructs a dive computer
      * @param percentN2 the percent of nitrogen in gas mixture
      * @param percentHe the percent of helium in gas mixture
-     * @param depth the depth to start at
+     * @param ambientPressure the pressure to start at
      */
-    public ZHL16(double percentN2, double percentHe, double depth)
+    public ZHL16(double percentN2, double percentHe, double ambientPressure)
     {
         this.percentN2 = percentN2 / 100;
         this.percentHe = percentHe / 100;
+        this.ambientPressure = ambientPressure;
 
         resetCompartments();
 
@@ -132,15 +133,6 @@ public class ZHL16
     }
 
 
-    /**
-     * converts meters to feet, useful for goToDepth() and ftToATM() because I use freedom units
-     * @param meter the freedomless unit of length
-     * @return the freedomful unit of length
-     */
-    private double meterToFt(double meter)
-    {
-        return meter * 3.281;
-    }
 
     /**
      * prints the compartments along with their partial pressures
