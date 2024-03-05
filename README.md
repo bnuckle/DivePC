@@ -14,7 +14,7 @@ Open command prompt in root folder where gradlew.bat is and type
 
 "gradlew run"
 
-# Based Off of Information Found in These Papers
+# Based Off These Sites/Papers
 https://aquatec.files.wordpress.com/2011/03/decompression-theory.pdf
 
 https://www.shearwater.com/wp-content/uploads/2019/05/understanding_m-values.pdf
