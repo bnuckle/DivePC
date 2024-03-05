@@ -126,22 +126,32 @@ public class ZHL16
     public void step(double delta)
     {
         //converts delta seconds into delta minutes
-        double te = delta / 60;
+        delta /= 60;
 
+
+        //Getting new compartment pressures
         for(int i = 0; i < 16; i++)
         {
 
             if(percentN2 != 0)
             {
-                compartmentN2[i] = compartmentN2[i] + (ambientPressure * percentN2 + compartmentN2[i]) * (1 - Math.pow(2, delta / halftimes[i][0]));
+                compartmentN2[i] = compartmentN2[i] + (((ambientPressure * percentN2) - compartmentN2[i]) * (1 - Math.pow(2, -1 * delta / halftimes[i][0])));
             }
 
             if(percentHe != 0)
             {
-                compartmentHe[i] = compartmentHe[i] + (ambientPressure * percentHe + compartmentHe[i]) * (1 - Math.pow(2, delta / halftimes[i][3]));
+                compartmentHe[i] = compartmentHe[i] + (((ambientPressure * percentHe) - compartmentHe[i]) * (1 - Math.pow(2, -1 * delta / halftimes[i][3])));
 
             }
         }
+
+        //Getting NDL
+        for(int i =0; i < 16; i++)
+        {
+
+        }
+
+
     }
 
     /**
@@ -160,6 +170,7 @@ public class ZHL16
     public String toString()
     {
         StringBuilder result = new StringBuilder();
+        result.append(String.format("Pressure: %f%n",ambientPressure));
         result.append("Compartments\nN2          He\n");
         for(int i = 0; i < 16; i++)
         {
@@ -175,5 +186,10 @@ public class ZHL16
     public void setPressure(double ambientPressure)
     {
         this.ambientPressure = ambientPressure;
+    }
+
+    public double fswToAmt(double fsw)
+    {
+        return fsw / 33.0662;
     }
 }
