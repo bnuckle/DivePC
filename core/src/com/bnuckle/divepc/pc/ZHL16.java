@@ -106,16 +106,14 @@ public class ZHL16
 
         resetCompartments();
 
-        NDL = (halftimes[0][0] /6.93) * Math.log((compartmentH[0]-depthToATM(depth))/mValue(depth,0) - depthToATM(depth) );
-
     }
 
     public void resetCompartments()
     {
         for(int i = 0; i < 16; i++)
         {
-            compartmentN2[i] = percentN2 * depthToATM(depth);
-            compartmentH[i] = percentHe * depthToATM(depth);
+            compartmentN2[i] = percentN2 * ambientPressure;
+            compartmentH[i] = percentHe * ambientPressure;
         }
     }
 
@@ -130,49 +128,9 @@ public class ZHL16
         //converts delta seconds into delta minutes
         double te = delta / 60;
 
-        //update each compartment
-        for(int i = 0; i < 16; i++)
-        {
-            //Nitrogen
-            if(percentN2 != 0)
-            {
-                double ntht = halftimes[i][0]; //Half-time of the compartment (minutes)
-                double nPGas = depthToATM(depth) * percentN2;
-                compartmentN2[i] = compartmentN2[i] + ((nPGas - compartmentN2[i]) * (1 - Math.pow(2, (-1 * te / ntht))));
 
-                NDL = Math.min(NDL, (halftimes[i][0] / 6.93) * Math.log((compartmentH[0] - depthToATM(depth)) / mValue(depth, i) - depthToATM(depth)));
-            }
-
-            //Helium
-            if (percentHe != 0)
-            {
-                double htht = halftimes[i][3]; //Half-time of the compartment (minutes)
-                double hPGas = depthToATM(depth) * percentHe;
-                compartmentH[i] = compartmentH[i] + ((hPGas - compartmentH[i]) * (1 - Math.pow(2, (te / htht))));
-
-                NDL = Math.min(NDL, (halftimes[i][3] / 6.93) * Math.log((compartmentH[0] - depthToATM(depth)) / mValue(depth, i) - depthToATM(depth)));
-            }
-        }
     }
 
-    /**
-     * converts depth to pressure
-     * @param feet depth underwater
-     * @return pressure
-     */
-    private double depthToATM(double feet)
-    {
-        return (feet + 33) / 33 ;
-    }
-
-    /**
-     * sets depth of pc
-     * @param d the depth IN FEET!!!!
-     */
-    public void goToDepth(double d)
-    {
-        depth = d;
-    }
 
     /**
      * converts meters to feet, useful for goToDepth() and ftToATM() because I use freedom units
@@ -206,17 +164,6 @@ public class ZHL16
             result.append(String.format("%f | %f%n", compartmentN2[i], compartmentH[i]));
         }
         return result.toString();
-    }
-
-    /**
-     * calculates the m value for each compartment depending on the depth of the diver for the pc
-     * @param depth the depth of the pc
-     * @param c the compartment/index of the tissue, offset by 1 since compartment 1 is index 0
-     * @return the m value
-     */
-    private double mValue(double depth, int c)
-    {
-        return mParts[c][1] * depth + mParts[c][0];
     }
 
 }
