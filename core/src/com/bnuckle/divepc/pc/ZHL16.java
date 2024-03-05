@@ -68,7 +68,7 @@ public class ZHL16
     private double percentN2, percentHe;
 
     private double[] compartmentN2 = new double[16];
-    private double[] compartmentH = new double[16];
+    private double[] compartmentHe = new double[16];
 
     private double ambientPressure;
 
@@ -114,7 +114,7 @@ public class ZHL16
         for(int i = 0; i < 16; i++)
         {
             compartmentN2[i] = percentN2 * ambientPressure;
-            compartmentH[i] = percentHe * ambientPressure;
+            compartmentHe[i] = percentHe * ambientPressure;
         }
     }
 
@@ -129,6 +129,21 @@ public class ZHL16
         //converts delta seconds into delta minutes
         double te = delta / 60;
 
+        for(int i = 0; i < 16; i++)
+        {
+
+            if(percentN2 != 0)
+            {
+                compartmentN2[i] = compartmentN2[i] + (ambientPressure * percentN2 + compartmentN2[i]) * (1 - Math.pow(2, delta / halftimes[i][0]));
+            }
+
+            if(percentHe != 0)
+            {
+                compartmentHe[i] = compartmentHe[i] + (ambientPressure * percentHe + compartmentHe[i]) * (1 - Math.pow(2, delta / halftimes[i][3]));
+
+            }
+        }
+
 
     }
 
@@ -139,7 +154,7 @@ public class ZHL16
      */
     public void printCompartments()
     {
-        System.out.println(toString());
+        System.out.println(this.toString());
     }
 
     /**
@@ -153,7 +168,7 @@ public class ZHL16
         result.append("Compartments\nN2          He\n");
         for(int i = 0; i < 16; i++)
         {
-            result.append(String.format("%f | %f%n", compartmentN2[i], compartmentH[i]));
+            result.append(String.format("%f | %f%n", compartmentN2[i], compartmentHe[i]));
         }
         return result.toString();
     }
